@@ -1,5 +1,6 @@
 package com.zihua.rpc.protocol;
 
+import com.zihua.rpc.serializer.Serialization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Created by 刘子华.
@@ -15,7 +17,7 @@ import java.util.Arrays;
  */
 @Data
 @Builder(toBuilder = true)
-public class RpcRequest implements Serializable {
+public class RpcRequest {
     
     private static final long serialVersionUID = -3860389620287914106L;
     
@@ -32,9 +34,9 @@ public class RpcRequest implements Serializable {
 
         RpcRequest that = (RpcRequest) o;
 
-        if (requestId != null ? !requestId.equals(that.requestId) : that.requestId != null) return false;
-        if (className != null ? !className.equals(that.className) : that.className != null) return false;
-        if (methodName != null ? !methodName.equals(that.methodName) : that.methodName != null) return false;
+        if (!Objects.equals(requestId, that.requestId)) return false;
+        if (!Objects.equals(className, that.className)) return false;
+        if (!Objects.equals(methodName, that.methodName)) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(parameters, that.parameters)) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
