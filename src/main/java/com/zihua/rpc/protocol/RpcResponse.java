@@ -1,9 +1,11 @@
 package com.zihua.rpc.protocol;
 
+import com.zihua.rpc.serializer.Serialization;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by 刘子华.
@@ -12,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @Builder(toBuilder = true)
-public class RpcResponse implements Serializable{
+public class RpcResponse {
 
     private static final long serialVersionUID = 5999285200463234265L;
     
@@ -27,8 +29,8 @@ public class RpcResponse implements Serializable{
 
         RpcResponse that = (RpcResponse) o;
 
-        if (requestId != null ? !requestId.equals(that.requestId) : that.requestId != null) return false;
-        if (throwable != null ? !throwable.equals(that.throwable) : that.throwable != null) return false;
-        return response != null ? response.equals(that.response) : that.response == null;
+        if (!Objects.equals(requestId, that.requestId)) return false;
+        if (!Objects.equals(throwable, that.throwable)) return false;
+        return Objects.equals(response, that.response);
     }
 }
