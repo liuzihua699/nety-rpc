@@ -1,8 +1,9 @@
-package com.zihua.rpc.serializer;
+package com.zihua.rpc.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.springframework.util.SerializationUtils;
 
 import java.util.List;
 
@@ -14,11 +15,9 @@ import java.util.List;
 public class RpcDecoder extends ByteToMessageDecoder {
     
     private Class<?> clazz;
-    private Serialization serialization;
 
-    public RpcDecoder(Class<?> clazz, Serialization serialization) {
+    public RpcDecoder(Class<?> clazz) {
         this.clazz = clazz;
-        this.serialization = serialization;
     }
 
     @Override
@@ -38,7 +37,8 @@ public class RpcDecoder extends ByteToMessageDecoder {
         
         // 将byteBuf中的数据读入data字节数组
         byteBuf.readBytes(data);
-        Object obj = serialization.deSerialize(clazz, data);
+//        Object obj = serialization.deSerialize(clazz, data);
+        Object obj = SerializationUtil.deserialize(data, clazz);
         list.add(obj);
     }
 }

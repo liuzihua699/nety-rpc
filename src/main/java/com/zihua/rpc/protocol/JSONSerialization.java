@@ -1,4 +1,4 @@
-package com.zihua.rpc.serializer;
+package com.zihua.rpc.protocol;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import java.io.IOException;
  * hs on 2020/04/15.
  * describe: 序列化协议的默认实现，使用jackson。
  */
-public class JSONSerialization implements Serialization{
+public class JSONSerialization implements Serialization {
     
     private ObjectMapper objectMapper;
 
@@ -35,5 +35,11 @@ public class JSONSerialization implements Serialization{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Serialization s = new JSONSerialization();
+        System.out.println(s.serialize("hello world"));
+        
     }
 }
