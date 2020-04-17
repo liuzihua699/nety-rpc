@@ -1,10 +1,7 @@
 package com.zihua.rpc.protocol;
 
-import com.zihua.rpc.serializer.Serialization;
-import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -13,7 +10,6 @@ import java.util.Objects;
  * describe: Rpc响应对象
  */
 @Data
-@Builder(toBuilder = true)
 public class RpcResponse {
 
     private static final long serialVersionUID = 5999285200463234265L;
