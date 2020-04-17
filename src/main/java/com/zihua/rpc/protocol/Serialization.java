@@ -1,4 +1,4 @@
-package com.zihua.rpc.serializer;
+package com.zihua.rpc.protocol;
 
 import java.io.IOException;
 
