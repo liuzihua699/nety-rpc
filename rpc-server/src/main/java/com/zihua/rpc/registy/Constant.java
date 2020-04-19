@@ -1,9 +1,9 @@
 package com.zihua.rpc.registy;
 
 /**
- * ZooKeeper constant
- *
- * @author huangyong
+ * @author by 刘子华.
+ * create on 2020/4/17.
+ * describe:  注册中心常量表
  */
 public interface Constant {
 

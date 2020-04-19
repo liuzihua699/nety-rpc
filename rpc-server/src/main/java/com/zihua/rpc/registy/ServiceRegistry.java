@@ -4,26 +4,33 @@ import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * 服务注册
- *
- * @author huangyong
- * @author luxiaoxun
+ * @author by 刘子华.
+ * create on 2020/4/17.
+ * describe: 基于zookeeper注册中心，实现服务注册
  */
+@Component
 public class ServiceRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceRegistry.class);
 
     private CountDownLatch latch = new CountDownLatch(1);
 
+    @Value("${registry.address}")
     private String registryAddress;
+
+    public ServiceRegistry() {
+    }
 
     public ServiceRegistry(String registryAddress) {
         this.registryAddress = registryAddress;

@@ -1,6 +1,9 @@
 package com.zihua.rpc.server;
 
-import com.zihua.rpc.protocol.*;
+import com.zihua.rpc.protocol.RpcDecoder;
+import com.zihua.rpc.protocol.RpcEncoder;
+import com.zihua.rpc.protocol.RpcRequest;
+import com.zihua.rpc.protocol.RpcResponse;
 import com.zihua.rpc.registy.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -16,9 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,15 +36,19 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/17.
- * describe:
+ * @author by 刘子华.
+ * create on 2020/04/17.
+ * describe: 服务器主要处理逻辑，RpcServer->RpcHandler
  */
+@Component
 public class RpcServer implements ApplicationContextAware, InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
 
+    @Value("${server.address}")
     private String serverAddress;
+    
+    @Resource
     private ServiceRegistry serviceRegistry;
 
     private Map<String, Object> handlerMap = new HashMap<>();
@@ -56,6 +70,16 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
      */
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+        ServiceRegistry sr = ctx.getBean(ServiceRegistry.class);
+        System.out.println("-----------------------------");
+        System.out.println(sr);
+        System.out.println("-----------------------------");
+        
+        RpcServer server = ctx.getBean(RpcServer.class);
+        System.out.println("-----------------------------");
+        System.out.println(server);
+        System.out.println("-----------------------------");
+        
         Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class);
         if (MapUtils.isNotEmpty(serviceBeanMap)) {
             for (Object serviceBean : serviceBeanMap.values()) {
@@ -64,12 +88,6 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                 handlerMap.put(interfaceName, serviceBean);
             }
         }
-
-        System.out.println("---------------------------------------");
-        for (String key : handlerMap.keySet()) {
-            System.out.println("name:" + key + " " + handlerMap.get(key));
-        }
-        System.out.println("---------------------------------------");
     }
     
     /**
@@ -101,12 +119,6 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            System.out.println("-------------------------------------------");
-            for (String interfaceName : handlerMap.keySet()) {
-                System.out.println(interfaceName + ":" + handlerMap.get(interfaceName));
-            }
-            System.out.println("-------------------------------------------");
-            
             String[] array = serverAddress.split(":");
             String host = array[0];
             int port = Integer.parseInt(array[1]);
