@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/14.
- * describe: Rpc请求对象
+ * @author by 刘子华.
+ * create on 2020/04/14.
+ * describe: Rpc请求对象（rpc request protocol.）
  */
 @Data
 public class RpcRequest {

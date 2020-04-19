@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.Objects;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/14.
- * describe: Rpc响应对象
+ * @author by 刘子华.
+ * create on 2020/4/14.
+ * describe: Rpc响应对象（rpc response protocol.）
  */
 @Data
 public class RpcResponse {

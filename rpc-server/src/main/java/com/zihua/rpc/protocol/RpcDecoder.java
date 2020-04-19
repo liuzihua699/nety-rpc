@@ -3,14 +3,13 @@ package com.zihua.rpc.protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.springframework.util.SerializationUtils;
 
 import java.util.List;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/15.
- * describe: RPC解码器
+ * @author by 刘子华.
+ * create on 2020/04/15.
+ * describe: RPC解码器，BytesStream->RpcRequest
  */
 public class RpcDecoder extends ByteToMessageDecoder {
     
@@ -34,7 +33,6 @@ public class RpcDecoder extends ByteToMessageDecoder {
             return;
         }
         byte[] data = new byte[dataLength];
-        
         // 将byteBuf中的数据读入data字节数组
         byteBuf.readBytes(data);
 //        Object obj = serialization.deSerialize(clazz, data);

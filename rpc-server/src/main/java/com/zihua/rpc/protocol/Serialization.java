@@ -3,9 +3,9 @@ package com.zihua.rpc.protocol;
 import java.io.IOException;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/15.
- * describe: 序列化协议定义
+ * @author by 刘子华.
+ * create on 2020/4/15.
+ * describe: 序列化接口的定义
  */
 public interface Serialization {
 

@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/15.
- * describe: RPC编码器
+ * @author by 刘子华.
+ * create on 2020/4/15.
+ * describe: RPC编码器，RpcRequest->BytesStream
  */
 public class RpcEncoder extends MessageToByteEncoder {
     
@@ -18,8 +18,8 @@ public class RpcEncoder extends MessageToByteEncoder {
     }
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, Object msg, ByteBuf byteBuf) throws Exception {
-        if (null != clazz && clazz.isInstance(msg)) {
+    protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf byteBuf) throws Exception {
+        if (clazz.isInstance(msg)) {
 //            byte[] bytes = serialization.serialize(msg);
             byte[] bytes = SerializationUtil.serialize(msg);
             byteBuf.writeInt(bytes.length);

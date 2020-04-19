@@ -2,12 +2,13 @@ package com.zihua.rpc.protocol;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 
 /**
- * Created by 刘子华.
- * hs on 2020/04/15.
- * describe: 序列化协议的默认实现，使用jackson。
+ * @author by 刘子华.
+ * create on 2020/04/15.
+ * describe: jackson序列化反序列化
  */
 public class JSONSerialization implements Serialization {
     
