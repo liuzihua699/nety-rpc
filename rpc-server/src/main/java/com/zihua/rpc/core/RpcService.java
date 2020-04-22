@@ -1,4 +1,4 @@
-package com.zihua.rpc.server;
+package com.zihua.rpc.core;
 
 import org.springframework.stereotype.Component;
 
