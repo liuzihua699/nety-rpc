@@ -11,16 +11,6 @@
 - 提供API文档支持,Restful调用
 - 更高的性能...
 
-## 架构设计
-
-### 服务端
-
-![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587534981067.png?x-oss-process=style/iBlog)
-
-### 客户端
-
-![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587535011284.png?x-oss-process=style/iBlog)
-
 ## 怎么使用
 
 1.  创建一个RPC接口
@@ -69,6 +59,18 @@ System.out.println("最大值：" + mathService.max(233, 19));
 
 rpcClient.stop();
 ```
+
+## 架构设计
+
+### 服务端
+
+![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587534981067.png?x-oss-process=style/iBlog)
+
+### 客户端
+
+![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587535011284.png?x-oss-process=style/iBlog)
+
+
 
 ## 注意
 
