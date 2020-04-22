@@ -1,7 +1,7 @@
 package com.zihua.rpc.demo.impl;
 
 import com.zihua.rpc.demo.TestHelloService;
-import com.zihua.rpc.server.RpcService;
+import com.zihua.rpc.core.RpcService;
 
 /**
  * Created by 刘子华.
