@@ -1,5 +1,6 @@
-package com.zihua.rpc.server;
+package com.zihua.rpc.core;
 
+import com.zihua.rpc.handler.RpcHandler;
 import com.zihua.rpc.protocol.RpcDecoder;
 import com.zihua.rpc.protocol.RpcEncoder;
 import com.zihua.rpc.protocol.RpcRequest;
@@ -20,12 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -70,16 +67,6 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
      */
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        ServiceRegistry sr = ctx.getBean(ServiceRegistry.class);
-        System.out.println("-----------------------------");
-        System.out.println(sr);
-        System.out.println("-----------------------------");
-        
-        RpcServer server = ctx.getBean(RpcServer.class);
-        System.out.println("-----------------------------");
-        System.out.println(server);
-        System.out.println("-----------------------------");
-        
         Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class);
         if (MapUtils.isNotEmpty(serviceBeanMap)) {
             for (Object serviceBean : serviceBeanMap.values()) {
