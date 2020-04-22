@@ -1,12 +1,11 @@
-package com.zihua.rpc.server;
+package com.zihua.rpc.handler;
 
 import com.zihua.rpc.demo.impl.MathServiceImpl;
+import com.zihua.rpc.exception.NotFoundInstanceException;
 import com.zihua.rpc.protocol.RpcRequest;
 import com.zihua.rpc.protocol.RpcResponse;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import com.zihua.rpc.core.RpcServer;
+import io.netty.channel.*;
 import net.sf.cglib.reflect.FastClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +23,13 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
     private static final Logger logger = LoggerFactory.getLogger(RpcHandler.class);
 
     private final Map<String, Object> handlerMap;
-
-    /**
-     * Created by 刘子华.
-     * hs on 2020/4/19.
-     * describe: 
-     */
+    
     public RpcHandler(Map<String, Object> handlerMap) {
         this.handlerMap = handlerMap;
     }
 
     @Override
-    public void channelRead0(final ChannelHandlerContext ctx, final RpcRequest request) throws Exception {
+    public void messageReceived(final ChannelHandlerContext ctx, final RpcRequest request) throws Exception {
         RpcServer.submit(new Runnable() {
             @Override
             public void run() {
@@ -46,7 +40,6 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
                     Object result = handle(request);
                     response.setResponse(result);
                 } catch (Throwable t) {
-                    System.out.println("方法调用出现异常");
                     response.setThrowable(t);
                     logger.error("RPC Server handle request error", t);
                 }
@@ -63,6 +56,7 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
     private Object handle(RpcRequest request) throws Throwable {
         String className   = request.getClassName();
         Object serviceBean = handlerMap.get(className);
+        if (serviceBean == null) throw new NotFoundInstanceException("not found instance \"" + className + "\".");
 
         Class<?>   serviceClass   = serviceBean.getClass();
         String     methodName     = request.getMethodName();
@@ -90,37 +84,6 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
         // for higher-performance
         int methodIndex = serviceFastClass.getIndex(methodName, parameterTypes);
         return serviceFastClass.invoke(methodIndex, serviceBean, parameters);
-    }
-
-    public static void main(String[] args) throws InvocationTargetException {
-        try {
-            test();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            System.out.println("报错了");
-        }
-    }
-    
-    
-    public static void test() throws Throwable {
-        String className   = "com.zihua.rpc.demo.MathServiceImpl";
-        Object serviceBean = new MathServiceImpl();
-
-        Class<?>   serviceClass   = serviceBean.getClass();
-        String     methodName     = "max";
-
-//        方法有参数的请求构造
-//        Class<?>[] parameterTypes = new Object[]{92, 325};
-//        Object[]   parameters     = new Class[2]{int.class, int.class};
-
-//        方法没有参数的请求构造
-        Class<?>[] parameterTypes = null;
-        Object[]   parameters = null;
-
-        FastClass serviceFastClass = FastClass.create(serviceClass);
-        int methodIndex = serviceFastClass.getIndex(methodName, parameterTypes);
-        Object result = serviceFastClass.invoke(methodIndex, serviceBean, parameters);
-        System.out.println(result);
     }
 
     @Override
