@@ -64,7 +64,7 @@ rpcClient.stop();
 
 引入了AOP数据埋点之后，可以记录客户发起的RPC请求，包括成功和失败的，通过服务监控类"com.zihua.rpc.aop.RpcMonitor"记录客户端对服务器发起的调用。
 
-比如我连续请求10次：
+比如我用如下代码连续请求10次：
 ```java
 public static void main(String[] args) {
     ServiceDiscovery serviceDiscovery = new ServiceDiscovery("127.0.0.1:2181");
