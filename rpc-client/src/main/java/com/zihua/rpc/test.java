@@ -3,6 +3,8 @@ package com.zihua.rpc;
 import com.zihua.rpc.core.RpcClient;
 import com.zihua.rpc.registry.ServiceDiscovery;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author by 刘子华.
  * create on 2020/04/21.

@@ -20,7 +20,7 @@ public class RpcRequest {
     private String methodName;
     private Object[] parameters;
     private Class<?>[] parameterTypes;
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

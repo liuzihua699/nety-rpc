@@ -2,6 +2,7 @@ package com.zihua.rpc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 /**
@@ -15,7 +16,7 @@ public class ServerApplication {
     
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
-//        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+//        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("rpc-service.xml");
 //        ctx.start();
     }
 }

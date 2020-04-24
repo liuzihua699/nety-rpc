@@ -39,4 +39,22 @@ public class RpcDecoder extends ByteToMessageDecoder {
         Object obj = SerializationUtil.deserialize(data, clazz);
         list.add(obj);
     }
+
+    public static void main(String[] args) {
+        int[] nums = {5,7,7,8,8,10};
+        int n = 8;
+        
+        mid(nums, n, 0, nums.length - 1);
+    }
+    
+    public static int mid(int[] nums, int n, int i, int j) {
+        if (j < 0 || i > j) return -1;
+        int m = (i + j) / 2;
+        if (nums[m] == n) return m;
+        if (n < nums[m]) {
+            return mid(nums, n, i, m - 1);
+        } else {
+            return mid(nums, n, m + 1, j);
+        }
+    }
 }

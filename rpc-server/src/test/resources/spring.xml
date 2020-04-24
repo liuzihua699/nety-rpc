@@ -15,7 +15,7 @@
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 
-    <bean id="rpcServer" class="com.zihua.rpc.server.RpcServer">
+    <bean id="rpcServer" class="com.zihua.rpc.core.RpcServer">
         <constructor-arg name="serverAddress" value="${server.address}"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>

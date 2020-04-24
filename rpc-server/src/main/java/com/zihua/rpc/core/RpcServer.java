@@ -1,6 +1,7 @@
 package com.zihua.rpc.core;
 
 import com.zihua.rpc.handler.RpcHandler;
+import com.zihua.rpc.handler.WatchHandler;
 import com.zihua.rpc.protocol.RpcDecoder;
 import com.zihua.rpc.protocol.RpcEncoder;
 import com.zihua.rpc.protocol.RpcRequest;
@@ -15,6 +16,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +30,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author by 刘子华.
@@ -48,11 +49,23 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     @Resource
     private ServiceRegistry serviceRegistry;
 
-    private Map<String, Object> handlerMap = new HashMap<>();
+    @Resource
+    private RpcHandler rpcHandler;
+
+    private ServiceWatch serviceWatch = ServiceWatch.getInstance();
+
+    private Map<String, Object> handlerMap = new ConcurrentHashMap<>();
     private static ThreadPoolExecutor threadPoolExecutor;
 
     private EventLoopGroup bossGroup = null;
     private EventLoopGroup workerGroup = null;
+    
+    static {
+        // 停机处理
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("程序退出！！！");
+        }));
+    }
 
     public RpcServer() {
     }
@@ -75,6 +88,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                 handlerMap.put(interfaceName, serviceBean);
             }
         }
+        rpcHandler.set(handlerMap);
     }
     
     /**
@@ -85,6 +99,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         start();
     }
     
+    // 启动netty，监听端口，通道内拦截rpc请求和http请求
     public void start() throws Exception {
         if (bossGroup == null && workerGroup == null) {
             bossGroup = new NioEventLoopGroup();
@@ -96,11 +111,12 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                         public void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
                                     .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
-//                                    .addLast(new RpcDecoder(RpcRequest.class, new JSONSerialization()))
-//                                    .addLast(new RpcEncoder(RpcResponse.class, new JSONSerialization()))
                                     .addLast(new RpcDecoder(RpcRequest.class))
                                     .addLast(new RpcEncoder(RpcResponse.class))
-                                    .addLast(new RpcHandler(handlerMap));
+                                    .addLast(rpcHandler);
+//                                    .addLast(new HttpResponseEncoder())
+//                                    .addLast(new HttpRequestDecoder())
+//                                    .addLast(new WatchHandler());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -113,9 +129,14 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             ChannelFuture future = bootstrap.bind(host, port).sync();
             logger.info("Server started on port {}", port);
 
+            // 注册至zookeeper
             if (serviceRegistry != null) {
                 serviceRegistry.register(serverAddress);
             }
+            
+            // 设置视察者
+            serviceWatch.set(handlerMap);
+            serviceWatch.setServiceRegistry(serviceRegistry);
 
             future.channel().closeFuture().sync();
         }
@@ -154,8 +175,6 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             logger.info("Loading service: {}", interfaceName);
             handlerMap.put(interfaceName, serviceBean);
         }
-
         return this;
     }
-    
 }
