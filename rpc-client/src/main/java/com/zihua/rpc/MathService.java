@@ -7,8 +7,7 @@ import com.zihua.rpc.core.MarkClassName;
  * hs on 2020/04/17.
  * describe:
  */
-@MarkClassName(className = "com.zihua.rpc.demo.MathService")
+@MarkClassName(className = "com.zihua.rpc.demo.MathService123")
 public interface MathService {
     public int max(int a, int b);
-    
 }

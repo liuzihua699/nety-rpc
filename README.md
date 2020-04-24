@@ -11,7 +11,7 @@
 - 提供API文档支持,Restful调用
 - 更高的性能...
 
-## 怎么使用
+## 简易使用
 
 1.  创建一个RPC接口
 
@@ -60,6 +60,46 @@ System.out.println("最大值：" + mathService.max(233, 19));
 rpcClient.stop();
 ```
 
+## 服务监控
+
+引入了AOP数据埋点之后，可以记录客户发起的RPC请求，包括成功和失败的，通过服务监控类"com.zihua.rpc.aop.RpcMonitor"记录客户端对服务器发起的调用。
+
+比如我连续请求10次：
+```java
+public static void main(String[] args) {
+    ServiceDiscovery serviceDiscovery = new ServiceDiscovery("127.0.0.1:2181");
+    RpcClient rpcClient = new RpcClient(serviceDiscovery);
+    
+    MathService mathService = rpcClient.create(MathService.class);
+    for (int i = 1; i <= 10; i++) {
+        System.out.println("最大值：" + mathService.max(233, 19));            
+    }
+    rpcClient.stop();
+}
+```
+
+然后查看服务端日志：
+
+![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716937710.png?x-oss-process=style/iBlog)
+
+如果我发起了错误的调用，那么也会记录，比如我将请求的包名改成错误的：
+```java
+@MarkClassName(className = "com.zihua.rpc.demo.MathService123")
+public interface MathService {
+    public int max(int a, int b);
+}
+```
+
+然后服务端会记录如下日志：
+
+![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716947302.png?x-oss-process=style/iBlog)
+
+第一行的INFO包含出错的Throwable，第二行就是ERROR了。
+
+可以根据实际场景把日志改成xml或者文本，
+
+
+
 ## 架构设计
 
 ### 服务端
@@ -69,7 +109,6 @@ rpcClient.stop();
 ### 客户端
 
 ![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587535011284.png?x-oss-process=style/iBlog)
-
 
 
 ## 注意

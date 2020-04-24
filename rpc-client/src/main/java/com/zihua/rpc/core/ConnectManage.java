@@ -121,26 +121,23 @@ public class ConnectManage {
 
     // 连接节点
     private void connectServerNode(final InetSocketAddress remotePeer) {
-        threadPoolExecutor.submit(new Runnable() {
-            @Override
-            public void run() {
-                Bootstrap b = new Bootstrap();
-                b.group(eventLoopGroup)
-                        .channel(NioSocketChannel.class)
-                        .handler(new RpcClientInitializer());
+        threadPoolExecutor.submit(() -> {
+            Bootstrap b = new Bootstrap();
+            b.group(eventLoopGroup)
+                    .channel(NioSocketChannel.class)
+                    .handler(new RpcClientInitializer());
 
-                ChannelFuture channelFuture = b.connect(remotePeer);
-                channelFuture.addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(final ChannelFuture channelFuture) throws Exception {
-                        if (channelFuture.isSuccess()) {
-                            logger.debug("Successfully connect to remote server. remote peer = " + remotePeer);
-                            RpcClientHandler handler = channelFuture.channel().pipeline().get(RpcClientHandler.class);
-                            addHandler(handler);
-                        }
+            ChannelFuture channelFuture = b.connect(remotePeer);
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(final ChannelFuture channelFuture) throws Exception {
+                    if (channelFuture.isSuccess()) {
+                        logger.debug("Successfully connect to remote server. remote peer = " + remotePeer);
+                        RpcClientHandler handler = channelFuture.channel().pipeline().get(RpcClientHandler.class);
+                        addHandler(handler);
                     }
-                });
-            }
+                }
+            });
         });
     }
 

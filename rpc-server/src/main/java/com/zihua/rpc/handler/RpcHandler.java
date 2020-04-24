@@ -21,6 +21,7 @@ import java.util.Map;
  * create on 2020/4/19.
  * describe: RPC Handler.
  */
+@ChannelHandler.Sharable
 @Component
 public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
     

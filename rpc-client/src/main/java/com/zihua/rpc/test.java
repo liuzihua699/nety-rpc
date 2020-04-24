@@ -16,8 +16,9 @@ public class test {
         RpcClient rpcClient = new RpcClient(serviceDiscovery);
         
         MathService mathService = rpcClient.create(MathService.class);
-        System.out.println("最大值：" + mathService.max(233, 19));
-
+        for (int i = 1; i <= 10; i++) {
+            System.out.println("最大值：" + mathService.max(233, 19));            
+        }
         rpcClient.stop();
     }
 }
