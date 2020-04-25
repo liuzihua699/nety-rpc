@@ -82,7 +82,6 @@ public static void main(String[] args) {
 
 ![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716937710.png?x-oss-process=style/iBlog)
 
-<img src="https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716937710.png?x-oss-process=style/iBlog" alt="image.png"  style="max-width:100%;">
 
 
 如果我发起了错误的调用，那么也会记录，比如我将请求的包名改成错误的：
@@ -97,7 +96,6 @@ public interface MathService {
 
 ![image.png](https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716947302.png?x-oss-process=style/iBlog)
 
-<img src="https://iblog-zihua.oss-cn-beijing.aliyuncs.com/image_1587716947302.png?x-oss-process=style/iBlog" alt="image.png"  style="max-width:100%;">
 
 第一行的INFO包含出错的Throwable，第二行就是ERROR了。
 
