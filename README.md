@@ -1,5 +1,11 @@
 # netty-rpc
 
+![Maven Central](https://img.shields.io/badge/Maven%20Central-v3.6.1-blue)
+![JDK](https://img.shields.io/badge/JDK-8+-brightgreen)
+![SpringBoot](https://img.shields.io/badge/SpringBoot-v2.2.4.RELEASE-green)
+![Netty](https://img.shields.io/badge/Netty-v4.1.42-red)
+![Protostuff](https://img.shields.io/badge/Protostuff-v1.0.8-orange)
+
 一个简单的RPC实现，基于Spring, Zookeeper, Netty
 
 ## 正在开发
