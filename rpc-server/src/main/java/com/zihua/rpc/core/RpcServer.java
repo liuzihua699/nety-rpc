@@ -43,8 +43,11 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
 
-    @Value("${server.address}")
-    private String serverAddress;
+    @Value("${rpc-config.host}")
+    private String host;
+    
+    @Value("${rpc-config.port}")
+    private Integer port;
     
     @Resource
     private ServiceRegistry serviceRegistry;
@@ -70,8 +73,9 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     public RpcServer() {
     }
 
-    public RpcServer(String serverAddress, ServiceRegistry serviceRegistry) {
-        this.serverAddress = serverAddress;
+    public RpcServer(String host, Integer port, ServiceRegistry serviceRegistry) {
+        this.host = host;
+        this.port = port;
         this.serviceRegistry = serviceRegistry;
     }
 
@@ -122,12 +126,10 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            String[] array = serverAddress.split(":");
-            String host = array[0];
-            int port = Integer.parseInt(array[1]);
+            String serverAddress = host + ":" + port;
 
             ChannelFuture future = bootstrap.bind(host, port).sync();
-            logger.info("Server started on port {}", port);
+            logger.info("Server started on host [{}] port [{}].",host, port);
 
             // 注册至zookeeper
             if (serviceRegistry != null) {
@@ -139,6 +141,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             serviceWatch.setServiceRegistry(serviceRegistry);
 
             future.channel().closeFuture().sync();
+            logger.info("Server stop!");
         }
     }
 

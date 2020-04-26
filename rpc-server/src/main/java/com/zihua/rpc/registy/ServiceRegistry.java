@@ -26,14 +26,18 @@ public class ServiceRegistry {
 
     private CountDownLatch latch = new CountDownLatch(1);
 
-    @Value("${registry.address}")
-    private String registryAddress;
+    @Value("${rpc-config.zookeeper-host}")
+    private String host;
+    
+    @Value("${rpc-config.zookeeper-port}")
+    private Integer port;
 
     public ServiceRegistry() {
     }
 
-    public ServiceRegistry(String registryAddress) {
-        this.registryAddress = registryAddress;
+    public ServiceRegistry(String host, Integer port) {
+        this.host = host;
+        this.port = port;
     }
 
     public void register(String data) {
@@ -49,6 +53,7 @@ public class ServiceRegistry {
     private ZooKeeper connectServer() {
         ZooKeeper zk = null;
         try {
+            String registryAddress = host + ":" + port;
             zk = new ZooKeeper(registryAddress, Constant.ZK_SESSION_TIMEOUT, new Watcher() {
                 @Override
                 public void process(WatchedEvent event) {
@@ -58,6 +63,7 @@ public class ServiceRegistry {
                 }
             });
             latch.await();
+            logger.info("connect zookpper in : [{}].", registryAddress);
         } catch (IOException e) {
             logger.error("", e);
         }
